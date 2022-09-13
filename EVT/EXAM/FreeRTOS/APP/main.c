@@ -120,9 +120,9 @@ void task3_task(void *pvParameters)
     xBinarySem = xSemaphoreCreateBinary();
     if(xBinarySem != NULL)
     {
-        GPIOA_ModeCfg(GPIO_Pin_12, GPIO_ModeIN_PU);
-        GPIOA_ITModeCfg(GPIO_Pin_12, GPIO_ITMode_FallEdge);
-        PFIC_EnableIRQ(GPIO_A_IRQn);
+        GPIOB_ModeCfg(GPIO_Pin_4, GPIO_ModeIN_PU);
+        GPIOB_ITModeCfg(GPIO_Pin_4, GPIO_ITMode_FallEdge);
+        PFIC_EnableIRQ(GPIO_B_IRQn);
         while (1)
         {
             if(xSemaphoreTake(xBinarySem, portMAX_DELAY) == pdTRUE)
@@ -204,27 +204,27 @@ int main(void)
 }
 
 /*********************************************************************
- * @fn      GPIOA_IRQHandler
+ * @fn      GPIOB_IRQHandler
  *
- * @brief   GPIOA_IRQHandler.
+ * @brief   GPIOB_IRQHandler.
  *
  * @param   none
  *
  * @return  none
  */
 __HIGH_CODE
-void GPIOA_IRQHandler(void)
+void GPIOB_IRQHandler(void)
 {
     /* 本函数可以作为在本工程FreeRTOS中的中断函数写法示例 */
     uint16_t flag;
     portBASE_TYPE xHigherPriorityTaskWoken;
-    flag = GPIOA_ReadITFlagPort();
-    if((flag & GPIO_Pin_12) != 0)
+    flag = GPIOB_ReadITFlagPort();
+    if((flag & GPIO_Pin_4) != 0)
     {
         xSemaphoreGiveFromISR(xBinarySem, &xHigherPriorityTaskWoken);
         portYIELD_FROM_ISR(xHigherPriorityTaskWoken);   /* 根据需要发起切换请求 */
     }
-    GPIOA_ClearITFlagBit(flag); /* 清除中断标志 */
+    GPIOB_ClearITFlagBit(flag); /* 清除中断标志 */
 }
 
 /******************************** endfile @ main ******************************/
